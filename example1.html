@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<canvas id="canvas" width="150" height="150"></canvas>
+
+
+<script type="application/javascript">
+    function draw() {
+//http://thecybertramp.com/blog/html5-canvas-and-arcs-of-a-circle-its-a-piece-of-pi
+//draw() will be called when the document loads
+        var canvas = document.getElementById("canvas");
+
+            //get the element with the id which you gave your canvas element: mine had id "canvas"
+        if (canvas.getContext) {
+            var ctx = canvas.getContext("2d");
+
+            //get the context: this is always an essential step. The context is then assigned to a variable.
+
+            ctx.beginPath();
+
+            //begin drawing a path
+            //arc(x, y, radius, startAngle, endAngle, anticlockwise)
+            ctx.arc(75,75,50,0,1.9 * Math.PI, false);
+
+            //change these parameters to alter the segment of circle drawn
+            //the first two parameters define the center of the circle
+            //the next defines the radius
+            //followed by the startAngle
+            //then the endAngle
+            //finally the direction in which the arc will be drawn (clockwise=false).
+            //if the last parameter is changed to true, the segment will be drawn anticlockwise
+
+            ctx.lineTo(75,75);
+
+            //draw a line to the center of the circle
+
+            ctx.closePath();
+
+            //draw a line back toctx.lineWidth = 8; the arc
+
+            ctx.stroke();
+
+        //stroke the path
+        }
+    }
+    draw();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en-us" id="iii">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta charset="UTF-8"/>
+	<meta name="description" content="Vincent V. Toscano website. Create canvas animation of a circle stroke upon percentage gain using requestAnimationFrame."/>
+	<meta name="keywords" content="Vincent V. Toscano, canvas, requestAnimationFrame, circle stroke, pure js, vanilla js"/>
+	<meta name="author" content="Vincent V. Toscano"/>
+	<meta name="copyright" content="&copy;2014 Vincent V. Toscano"/>
+
+	<title>Canvas: Circle stroke upon percentage gain using requestAnimationFrame for animation</title>
+
+	<style>
+		#canvas_1{
+			position: absolute;
+			top: 50%; left: 50%;
+			width: 150px;
+			height: 150px;
+			background: transparent;
+			margin: -75px 0 0 -75px;
+		}
+		body:after{
+			position: absolute;
+			right:0;bottom: 0;
+			width: 150px;
+			height: 30px;
+			background: slategray;
+			color:#FFF;
+			content: "Vincent V. Toscano";
+			font: 14px Arial,Helvetica Neue, Helvetica, Arial,san-serif;
+			line-height: 30px;
+			text-align: center;
+		}
+
+	</style>
+</head>
+<body>
+<canvas id="canvas_1" width="150" height="150"></canvas>
+
+<script type="application/javascript">
+	var requestAnimationFrame = window.requestAnimationFrame ||
+			window.mozRequestAnimationFrame ||
+			window.webkitRequestAnimationFrame ||
+			window.msRequestAnimationFrame;
+
+    var NbrUtils = (function () {
+        var isNInRange = function(x, min, max) {return x >= min && x <= max;};
+        //What percent of 20 is 30? 30 ÷ 20 = x = 1.5
+        var percentRate = function(ori, comparative){
+            return (comparative /ori)*100;
+        };
+        //What is 35% of 80? x = (0.35)(80)
+        var percentFindComparativeNo = function(rate, ori){return (rate / 100)*ori;};
+        /**
+         * getRandomIntFromRange --- Returns a random integer between min and max
+         */
+        var getRdmIntFromRange = function (min, max) {return Math.floor(Math.random() * (max - min + 1)) + min;};
+        var degreesToRadians= function(degrees) {return degrees * Math.PI/180;};
+        return {
+            isNumInRange: isNInRange,
+            percentRate:percentRate,
+            percentFindComparativeNo:percentFindComparativeNo,
+            getRdmIntFromRange:getRdmIntFromRange,
+            degreesToRadians:degreesToRadians
+        };
+    })();
+
+    var startAngle = 0;
+    var mainCanvas = document.getElementById("canvas_1");
+    var canvasWidth = mainCanvas.width;
+    var canvasHeight = mainCanvas.height;
+    var mockPercentageGains = [2,11.2,18,14.3,33.5,41,44,48,55.1,55.2,60.1, 62,63,68,71,72,76,79,81,88,91,96,99,100];
+    var mockPercentageGainsIndex=0;
+
+    function draw(stopAngle) {
+
+        if (mainCanvas.getContext) {
+            var self = this;
+            var ctx = mainCanvas.getContext("2d");
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            ctx.beginPath();
+	        ctx.lineWidth = 8;
+	        ctx.strokeStyle = 'rgb('+NbrUtils.getRdmIntFromRange(1,255)+',' + NbrUtils.getRdmIntFromRange(1,255) + ',' + NbrUtils.getRdmIntFromRange(1,255) + ')';
+
+            //arc(x, y, radius, startAngle, endAngle, anticlockwise)
+            // startAngle   0 always is 3 o'clock
+            //change these parameters to alter the segment of circle drawn
+            //the first two parameters define the center of the circle
+            //the next defines the radius
+            //followed by the startAngle
+            //then the endAngle
+            //finally the direction in which the arc will be drawn (clockwise=false).
+            //if the last parameter is changed to true, the segment will be drawn anticlockwise
+
+            ctx.arc(75,75,50,startAngle,stopAngle, false);
+            //startAngle = stopAngle - 0.01;
+            //draw a line back to the arc
+            //ctx.closePath();
+            ctx.stroke();
+
+
+        }
+    }
+
+    function myFunc(){
+        var ComparativeNo = NbrUtils.percentFindComparativeNo(mockPercentageGains[mockPercentageGainsIndex], 360);
+
+        console.log(mockPercentageGains[mockPercentageGainsIndex]+"%  |\tComparativeNo = "+ComparativeNo);
+
+        draw(NbrUtils.degreesToRadians(ComparativeNo));//NbrUtils.degreesToRadians(ComparativeNo)
+
+
+        mockPercentageGainsIndex++;
+
+        if (mockPercentageGainsIndex > mockPercentageGains.length-1){
+	        // Draw circle ended
+        } else {
+            requestAnimationFrame(myFunc);
+        }
+    };
+
+	window.onload=requestAnimationFrame(myFunc);
+</script>
+</body>
+</html>
